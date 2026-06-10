@@ -52,15 +52,21 @@ The naive prompt generated a recognizable dragon. The optimized prompt generated
 
 ---
 
-### Finding 2 — Minimal impact on simple geometric objects
+### Finding 2 — Over-specified prompts can change weapon archetype, not just quality
 
-**Test: `a cool sword` vs optimized prompt**
+**Test: `a cool sword` vs `3D model of a detailed sword, game-ready low-poly asset, tempered steel blade, clean quad topology, isolated object, no background`**
 
-Both produced recognizable swords. The optimized version was marginally cleaner but the difference was small.
+| Metric | Naive `a cool sword` | Optimized | Delta |
+|---|---|---|---|
+| Faces | 129,400 | 167,050 | **+37,650 (+29.1%)** |
+| Vertices | 64,690 | 83,527 | **+18,837 (+29.1%)** |
+| Printability | ✅ | ✅ | same |
 
-**Why:** Swords are simple, well-represented shapes. Meshy handles them well regardless of prompt quality. Prompt sensitivity is low for simple objects.
+The optimized prompt produced 29% more geometry — but also changed the weapon type. The naive prompt generated an **ornate fantasy longsword** with decorative hilt and cross-guard. The optimized prompt generated a **realistic combat knife** — a different weapon archetype entirely.
 
-**Takeaway:** The optimizer's value scales with object complexity and ambiguity. Characters, creatures, and environments benefit most.
+The "tempered steel blade" material hint unintentionally steered Meshy toward a modern tactical style rather than the fantasy aesthetic implied by "cool sword."
+
+**Takeaway:** Over-specifying material hints on weapons overrides implicit style context. The optimizer needs smarter material inference — when the input implies fantasy (e.g., "cool sword"), the material hint should match that aesthetic, not default to realistic steel.
 
 ---
 
