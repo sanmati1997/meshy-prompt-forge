@@ -2,7 +2,7 @@
 
 > Turns weak 3D prompts into production-ready ones — built to reduce activation drop-off on Meshy.ai.
 
-**Live demo:** [link] | **Case study:** [CASE_STUDY.md](CASE_STUDY.md) | **Built in:** one night
+**[Live demo](https://meshy-prompt-forge.streamlit.app)** | **[Case study](CASE_STUDY.md)** | Built in one night
 
 ---
 
@@ -12,43 +12,80 @@ Takes a plain-English prompt → rewrites it using rules reverse-engineered from
 
 ```
 Input:   "a cool sword"
-Output:  "3D model of a detailed sword, game-ready low-poly asset, 
-          tempered steel blade, clean quad topology, isolated object, 
-          no background"
+Output:  "3D model of Fantasy sword, enchanted steel blade,
+          clean quad topology, isolated object, no background"
 
-Changes: 6 — each one explained with a reason
+Changes: 5 — each one explained with a reason
 ```
 
 ---
 
 ## Results
 
-### Dragon — +20.8% geometry, clean topology confirmed
+### Dragon — +20.8% geometry, topology fully confirmed
 
-| Naive prompt: `dragon` | Optimized prompt |
+| Naive: `dragon` | Optimized |
 |:---:|:---:|
 | ![Dragon Naive](assets/results/dragon_naive.png) | ![Dragon Optimized](assets/results/dragon_optimized.png) |
 
-| Metric | Naive `dragon` | Optimized | Delta |
+| Metric | Naive | Optimized | Delta |
 |---|---|---|---|
-| Faces | 992,658 | 1,199,452 | **+206,794 (+20.8%)** |
-| Vertices | 496,327 | 599,724 | **+103,397 (+20.8%)** |
+| Faces | 992,658 | 1,199,452 | **+20.8%** |
 | Watertight | — | **Yes** | ✅ |
 | Holes | — | **0** | ✅ |
 | Non-manifold edges | — | **0** | ✅ |
 
-### Sword — +29.1% geometry, archetype shift identified
+---
 
-| Naive prompt: `a cool sword` | Optimized prompt |
+### Sword — material inference risk identified and fixed
+
+| Naive: `a cool sword` | Wrong optimized | Fixed optimized |
+|:---:|:---:|:---:|
+| ![Sword Naive](assets/results/sword_naive.png) | ![Sword Optimized](assets/results/sword_optimized.png) | ![Fantasy Sword](assets/results/sword_fantasy_optimized.png) |
+
+`"tempered steel blade"` overrode the fantasy intent → combat knife instead of longsword. Fix: explicit object-type framing (`"Fantasy sword"`) preserves the archetype. **Object framing beats material hints.**
+
+---
+
+### Warrior — T-pose + isolation produces rigging-ready assets
+
+| Naive: `warrior` | Optimized (T-pose) |
 |:---:|:---:|
-| ![Sword Naive](assets/results/sword_naive.png) | ![Sword Optimized](assets/results/sword_optimized.png) |
+| ![Warrior Naive](assets/results/warrior_naive.png) | ![Warrior Optimized](assets/results/warrior_optimized.png) |
 
-| Metric | Naive `a cool sword` | Optimized | Delta |
+| Metric | Naive | Optimized | Delta |
 |---|---|---|---|
-| Faces | 129,400 | 167,050 | **+37,650 (+29.1%)** |
-| Vertices | 64,690 | 83,527 | **+18,837 (+29.1%)** |
+| Faces | 992,234 | 574,084 | **-42.1%** |
+| Pose | Action pose on pedestal | Clean T-pose, isolated | rigging-ready |
+| Watertight | ✅ | ✅ | same |
 
-Naive produced an ornate fantasy longsword. Optimized produced a realistic combat knife. More geometry — but wrong archetype. This exposed a flaw in the material inference logic (see Findings below).
+Fewer faces = fewer wasted polygons on base geometry. Optimization redirected the budget to the character mesh itself.
+
+---
+
+### Dota 2 SF — IP characters need image-to-3D, not text optimization
+
+| Official art | Naive: `dota 2 sf` | Optimized |
+|:---:|:---:|:---:|
+| ![SF Reference](assets/results/sf_reference.png) | ![SF Naive](assets/results/sf_naive.png) | ![SF Optimized](assets/results/sf_optimized.png) |
+
+Optimized prompt produced a better hero structure (+16.7% geometry), but neither output is Shadow Fiend. This is a training data gap — no prompt fixes it. The tool now detects IP characters and routes to image-to-3D.
+
+---
+
+### Crate — diminishing returns on simple props, topology still improves
+
+| Naive: `crate` | Optimized |
+|:---:|:---:|
+| ![Crate Naive](assets/results/crate_naive.png) | ![Crate Optimized](assets/results/crate_optimized.png) |
+
+| Metric | Naive | Optimized | Delta |
+|---|---|---|---|
+| Faces | 1,083,828 | 1,191,605 | **+9.9%** |
+| Holes | 13 | 4 | **-69.2%** |
+| Non-manifold edges | 426 | 183 | **-57.0%** |
+
+Smallest geometry lift of all tests — confirms the secondary hypothesis. Simple objects benefit less. But topology cleanup is still real.
 
 ---
 
@@ -67,36 +104,23 @@ Text-to-3D is 10x harder to prompt than text-to-image. New users have no mental 
 
 ## Key Findings
 
-### ✅ Finding 1 — Works on complex objects
-Optimized dragon prompt produced 20.8% more geometry, confirmed watertight with 0 holes and 0 non-manifold edges. The optimizer adds enough context to push Meshy toward higher-fidelity outputs on ambiguous objects.
+### ✅ Finding 1 — Optimization works best on complex objects
+Dragon: +20.8% geometry, watertight, 0 holes, 0 non-manifold edges. Rules push Meshy toward production-ready outputs on ambiguous objects.
 
 ### ⚠️ Finding 2 — Material hints can override style intent
-"Tempered steel blade" steered Meshy from a fantasy sword to a realistic knife. **Fix needed:** material inference must detect implied style context (fantasy vs realistic) before choosing a hint.
+`"tempered steel blade"` turned a fantasy sword into a combat knife. Fix: use explicit object-type framing to preserve intent before adding material hints.
 
-### 🔍 Finding 3 — IP characters need image-to-3D, not text
-Neither naive nor optimized prompts produced a recognizable Shadow Fiend. The tool now detects IP characters and routes to image-to-3D automatically.
+### ✅ Finding 3 — T-pose + isolation is the highest-impact rule for characters
+`warrior` naive: 992K faces on a pedestal. Optimized: 574K faces, T-pose, no base — 42% smaller and actually usable in a game engine.
 
-### 🔍 Finding 4 — Free tier download gating breaks evaluation loop
-Free users can generate but can't export GLBs. They can't evaluate quality in Blender or a game engine. The try-before-you-buy loop is broken — likely a fixable conversion drag.
+### 🔍 Finding 4 — IP characters can't be reproduced from text alone
+Neither prompt produced a recognizable Shadow Fiend. The tool now detects IP characters and flags the image-to-3D workflow.
 
----
+### 📊 Finding 5 — Simple props: smaller geometry lift, topology gains still real
+Crate: only +9.9% geometry improvement vs. +20.8% for the dragon. But holes dropped 69%, non-manifold edges dropped 57%.
 
-## Improvements Built During Experiment
-
-**Game IP detection** — detects Dota 2, LoL, Overwatch, Valorant, Fortnite, WoW, Minecraft, Pokemon and applies IP-specific art styles automatically.
-
-**Named character recognition** — Shadow Fiend, Invoker, Yasuo, Tracer and others correctly detected as characters, not generic objects.
-
-**Image-to-3D routing** — when IP character is detected, tool flags the correct workflow instead of over-optimizing a text prompt that won't work.
-
----
-
-## Pending Improvements
-
-- [ ] Context-aware material inference (detect fantasy vs realistic from prompt tone before adding material hint)
-- [ ] Hero/character database for IP-specific style hints beyond generic "Valve art style"
-- [ ] Mesh scoring on Meshy outputs (blocked by free tier download limit — infrastructure is ready)
-- [ ] A/B test pipeline to validate rules at scale
+### 🔍 Finding 6 — Free tier download gating breaks the evaluation loop
+Free users can generate but can't export. They can't validate quality before paying. The try-before-you-buy loop is broken.
 
 ---
 
@@ -106,14 +130,14 @@ Free users can generate but can't export GLBs. They can't evaluate quality in Bl
 
 | Rule | Reason |
 |---|---|
-| Add "3D model of" prefix | Meshy responds better to explicit 3D framing |
+| Add `3D model of` prefix | Meshy responds better to explicit 3D framing |
 | Detect object type | Enables context-aware downstream rules |
 | Add style tag | Style-less prompts produce inconsistent outputs |
 | Add material hint | Material ambiguity causes texture inconsistency |
-| Add "clean quad topology" | Improves mesh quality for rigging and sculpting |
-| Add isolation context | Prevents unwanted scene elements |
+| Add `clean quad topology` | Improves mesh quality for rigging and sculpting |
+| Add isolation context | Prevents unwanted scene elements and base objects |
 | Add T-pose for characters | Critical for rigging compatibility |
-| Replace vague adjectives | "cool" → "detailed", "nice" → "well-crafted" |
+| Replace vague adjectives | `"cool"` → `"detailed"`, `"nice"` → `"well-crafted"` |
 
 **Mesh scorer** — 4 objective topology metrics:
 
@@ -146,5 +170,5 @@ python run.py compare naive.glb optimized.glb
 
 ---
 
-Built by [Sanmati Sawalwade](https://linkedin.com/in/sanmatiwalwade) — MS Information Systems, Northeastern University Silicon Valley  
-sawalwade.s@northeastern.edu Really Happy to Get a Opportunity For Summer/Fall 2026 Internship
+Built by [Sanmati Sawalwade](https://linkedin.com/in/sanmati-sawalwade) — MS Information Systems, Northeastern University Silicon Valley  
+sawalwade.s@northeastern.edu
