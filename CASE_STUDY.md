@@ -1,7 +1,7 @@
 # Meshy Prompt Optimizer — Case Study
 
 **Author:** Sanmati Sawalwade  
-**Background:** MS Information Systems, Northeastern University (Silicon Valley) | Ex-Gameskraft | Startup Founder  
+**Background:** MS Information Systems, Northeastern University (Silicon Valley) | Ex-Gameskraft | Startup Founder | Looking for Summer/Fall 2026 Internship
 **Built in:** One night  
 **Repo:** [github.com/sanmati1997/meshy-prompt-optimizer](https://github.com/sanmati1997/meshy-prompt-optimizer)  
 **Live demo:** [meshy-optimizer.streamlit.app](https://meshy-optimizer.streamlit.app)
