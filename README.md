@@ -25,6 +25,10 @@ Changes: 6 — each one explained with a reason
 
 ### Dragon — +20.8% geometry, clean topology confirmed
 
+| Naive prompt: `dragon` | Optimized prompt |
+|:---:|:---:|
+| ![Dragon Naive](assets/results/dragon_naive.png) | ![Dragon Optimized](assets/results/dragon_optimized.png) |
+
 | Metric | Naive `dragon` | Optimized | Delta |
 |---|---|---|---|
 | Faces | 992,658 | 1,199,452 | **+206,794 (+20.8%)** |
@@ -34,6 +38,10 @@ Changes: 6 — each one explained with a reason
 | Non-manifold edges | — | **0** | ✅ |
 
 ### Sword — +29.1% geometry, archetype shift identified
+
+| Naive prompt: `a cool sword` | Optimized prompt |
+|:---:|:---:|
+| ![Sword Naive](assets/results/sword_naive.png) | ![Sword Optimized](assets/results/sword_optimized.png) |
 
 | Metric | Naive `a cool sword` | Optimized | Delta |
 |---|---|---|---|
