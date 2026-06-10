@@ -60,7 +60,7 @@ A heuristic-driven prompt optimizer and mesh quality scorer, built in one night 
 
 **Stack:** Python · Streamlit · trimesh · Plotly · $0 · No paid APIs.
 
-### The 8 optimizer rules
+### The 8 optimizer patterns
 
 | Rule | Why |
 |---|---|
@@ -100,16 +100,16 @@ Scores any GLB on 4 objective topology metrics:
 - Naive: `dragon`
 - Optimized: `3D model of dragon, game-ready stylized asset, organic skin and scales, clean quad topology, isolated object, no background`
 
-**What the optimizer changed (6 rules fired):**
+**What the optimizer changed (6 patterns applied):**
 
 | Change | Rule | Reason |
 |---|---|---|
-| Added `3D model of` | Prefix rule | Meshy anchors on explicit 3D framing |
+| Added `3D model of` | Prefix pattern | Meshy anchors on explicit 3D framing |
 | Object type → **creature** | Type detection | Enables creature-specific downstream rules |
-| Added `game-ready stylized asset` | Style rule | No style tag → inconsistent mesh detail distribution |
-| Added `organic skin and scales` | Material rule | No material hint → texture ambiguity on complex surfaces |
-| Added `clean quad topology` | Topology rule | Forces structured mesh for rigging/sculpting |
-| Added `isolated object, no background` | Isolation rule | Prevents Meshy from adding terrain or scene elements |
+| Added `game-ready stylized asset` | Style pattern | No style tag → inconsistent mesh detail distribution |
+| Added `organic skin and scales` | Material pattern | No material hint → texture ambiguity on complex surfaces |
+| Added `clean quad topology` | Topology pattern | Forces structured mesh for rigging/sculpting |
+| Added `isolated object, no background` | Isolation pattern | Prevents Meshy from adding terrain or scene elements |
 
 | Naive: `dragon` | Optimized |
 |:---:|:---:|
@@ -148,16 +148,16 @@ This finding required three experiments: naive, wrong-optimized, and fixed-optim
 - Wrong optimized: `3D model of a detailed sword, game-ready low-poly asset, tempered steel blade, clean quad topology, isolated object, no background`
 - Fixed optimized: `3D model of Fantasy sword, tempered steel blade, clean quad topology, isolated object, no background`
 
-**What the optimizer changed in the wrong version (6 rules fired):**
+**What the optimizer changed in the wrong version (6 patterns applied):**
 
 | Change | Rule | What went wrong |
 |---|---|---|
-| Added `3D model of` | Prefix rule | ✅ Correct |
+| Added `3D model of` | Prefix pattern | ✅ Correct |
 | Object type → **weapon** | Type detection | ✅ Correct |
-| Replaced `cool` → `detailed` | Vague adjective rule | ✅ Correct |
-| Added `game-ready low-poly asset` | Style rule | ✅ Correct |
-| Added `tempered steel blade` | Material rule | ⚠️ **Wrong** — tactical material hint, ignored fantasy context from `"cool sword"` |
-| Added topology + isolation | Standard rules | ✅ Correct |
+| Replaced `cool` → `detailed` | Vague adjective pattern | ✅ Correct |
+| Added `game-ready low-poly asset` | Style pattern | ✅ Correct |
+| Added `tempered steel blade` | Material pattern | ⚠️ **Wrong** — tactical material hint, ignored fantasy context from `"cool sword"` |
+| Added topology + isolation | Standard patterns | ✅ Correct |
 
 **What the fix changed:**
 
@@ -197,17 +197,17 @@ The fixed-optimized version produced a proper fantasy sword — ornate detailing
 - Naive: `warrior`
 - Optimized: `3D model of Warrior, game-ready stylized asset, fabric and leather armor, clean quad topology, isolated object, no background, standing upright in T-pose`
 
-**What the optimizer changed (7 rules fired):**
+**What the optimizer changed (7 patterns applied):**
 
 | Change | Rule | Reason |
 |---|---|---|
-| Added `3D model of` | Prefix rule | Explicit 3D framing |
+| Added `3D model of` | Prefix pattern | Explicit 3D framing |
 | Object type → **character** | Type detection | Unlocks T-pose rule + isolation priority |
-| Added `game-ready stylized asset` | Style rule | Guides Meshy toward pipeline-ready output |
-| Added `fabric and leather armor` | Material rule | Prevents ambiguous material assignment on clothing |
-| Added `clean quad topology` | Topology rule | Structured mesh required for auto-rigging |
-| Added `isolated object, no background` | Isolation rule | **Removes base/pedestal** — critical for placement in scenes |
-| Added `standing upright in T-pose` | Character rule | **Rigging-ready pose** — auto-rigging tools require T or A-pose |
+| Added `game-ready stylized asset` | Style pattern | Guides Meshy toward pipeline-ready output |
+| Added `fabric and leather armor` | Material pattern | Prevents ambiguous material assignment on clothing |
+| Added `clean quad topology` | Topology pattern | Structured mesh required for auto-rigging |
+| Added `isolated object, no background` | Isolation pattern | **Removes base/pedestal** — critical for placement in scenes |
+| Added `standing upright in T-pose` | Character pattern | **Rigging-ready pose** — auto-rigging tools require T or A-pose |
 
 | Naive: `warrior` | Optimized (T-pose) |
 |:---:|:---:|
@@ -249,17 +249,17 @@ The optimized version is 42.1% smaller, in clean T-pose, with no base. It can be
 - Naive: `dota 2 sf`
 - Optimized: `3D model of Dota 2 sf, Dota 2 stylized hero model, Valve art style, detailed armor and fabric, game-ready PBR materials, clean quad topology, isolated object, no background, standing upright in T-pose`
 
-**What the optimizer changed (7 rules fired, including IP detection):**
+**What the optimizer changed (7 patterns applied, including IP detection):**
 
 | Change | Rule | Reason |
 |---|---|---|
-| Added `3D model of` | Prefix rule | Explicit 3D framing |
-| Detected IP → **Dota 2** | IP detection rule | Triggers IP-specific style pack |
-| Added `Dota 2 stylized hero model, Valve art style` | IP style rule | Best available style anchoring for Dota 2 assets |
-| Added `detailed armor and fabric, game-ready PBR materials` | Material rule | Character-appropriate material assignment |
-| Added `clean quad topology` | Topology rule | Structured mesh for hero asset |
-| Added `isolated object, no background` | Isolation rule | Removes scene elements |
-| Added `standing upright in T-pose` | Character rule | Rigging-ready pose |
+| Added `3D model of` | Prefix pattern | Explicit 3D framing |
+| Detected IP → **Dota 2** | IP detection pattern | Triggers IP-specific style pack |
+| Added `Dota 2 stylized hero model, Valve art style` | IP style pattern | Best available style anchoring for Dota 2 assets |
+| Added `detailed armor and fabric, game-ready PBR materials` | Material pattern | Character-appropriate material assignment |
+| Added `clean quad topology` | Topology pattern | Structured mesh for hero asset |
+| Added `isolated object, no background` | Isolation pattern | Removes scene elements |
+| Added `standing upright in T-pose` | Character pattern | Rigging-ready pose |
 
 | Official Shadow Fiend | Naive: `dota 2 sf` | Optimized |
 |:---:|:---:|:---:|
@@ -296,14 +296,14 @@ The optimized prompt produced a significantly better result structurally: a prop
 - Naive: `crate`
 - Optimized: `3D model of crate, game-ready low-poly asset, matte surface texture, clean quad topology, isolated object, no background`
 
-**What the optimizer changed (5 rules fired):**
+**What the optimizer changed (5 patterns applied):**
 
 | Change | Rule | Reason |
 |---|---|---|
-| Added `3D model of` | Prefix rule | Explicit 3D framing |
+| Added `3D model of` | Prefix pattern | Explicit 3D framing |
 | Object type → **prop** | Type detection | No T-pose rule — props don't need rigging |
-| Added `game-ready low-poly asset` | Style rule | Guides toward efficient mesh density for a prop |
-| Added `matte surface texture` | Material rule | Resolves material ambiguity on wooden/metal surfaces |
+| Added `game-ready low-poly asset` | Style pattern | Guides toward efficient mesh density for a prop |
+| Added `matte surface texture` | Material pattern | Resolves material ambiguity on wooden/metal surfaces |
 | Added `clean quad topology` + `isolated object` | Topology + Isolation | Standard cleanup rules |
 
 | Naive: `crate` | Optimized |
