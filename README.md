@@ -1,6 +1,10 @@
 # Meshy Prompt Forge
 
-> Turns weak 3D prompts into production-ready ones — and proves it with mesh quality scores.
+> Turns weak 3D prompts into production-ready ones — built to reduce activation drop-off on Meshy.ai.
+
+**Live demo:** [link] | **Case study:** [CASE_STUDY.md](CASE_STUDY.md)
+
+---
 
 ## The Problem
 
@@ -11,9 +15,11 @@ A user types `"a cool sword"`, gets a mediocre mesh, and leaves before the "aha 
 Public evidence:
 - G2 reviewer: *"small wording changes produce wildly different results"*
 - Trustpilot: users reporting wasted credits on bad first outputs
-- Meshy's own prompt tips doc exists — companies only write those when support tickets pile up
+- Meshy's own prompt tips doc — companies only write those when support tickets pile up
 
 Text-to-3D is 10x harder to prompt than text-to-image. There's no established mental model for new users. This tool fills that gap.
+
+---
 
 ## What It Does
 
@@ -23,23 +29,100 @@ Text-to-3D is 10x harder to prompt than text-to-image. There's no established me
 4. Scores both generated meshes on objective quality metrics
 5. Quantifies the improvement
 
-## Results
+---
 
-| Prompt | Naive Score | Optimized Score | Delta |
-|---|---|---|---|
-| "a cool sword" | — | — | — |
-| "a warrior" | — | — | — |
-| "a dragon" | — | — | — |
-| "a nice vase" | — | — | — |
-| "a futuristic car" | — | — | — |
-| "a wooden barrel" | — | — | — |
-| **Average** | | | |
+## Key Findings
 
-*Results will be filled in after running the experiment.*
+### Finding 1 — Optimizer works best on complex, ambiguous objects
+
+**Test: `dragon` vs optimized prompt**
+
+| | Result |
+|---|---|
+| Naive: `dragon` | Generated a **baby dragon** — Meshy defaulted to the smallest, safest interpretation |
+| Optimized | Generated a **full-scale dragon** — correct size, style, and visual fidelity |
+
+One word left too much ambiguity. The optimizer added style, scale framing, and material context — enough for Meshy to produce the intended result. This is the clearest proof the tool works.
+
+---
+
+### Finding 2 — Minimal impact on simple geometric objects
+
+**Test: `a cool sword` vs optimized prompt**
+
+Both produced recognizable swords. The optimized version was marginally cleaner but the difference was small.
+
+**Why:** Swords are simple, well-represented shapes. Meshy handles them well regardless of prompt quality. Prompt sensitivity is low for simple objects.
+
+**Takeaway:** The optimizer's value scales with object complexity and ambiguity. Characters, creatures, and environments benefit most.
+
+---
+
+### Finding 3 — IP characters need image-to-3D, not text optimization
+
+**Test: `dota 2 sf` (Shadow Fiend)**
+
+Neither naive nor optimized text prompts produced a model resembling Shadow Fiend. The tool correctly identified it as a Dota 2 character and added the right style tags — but Meshy's model doesn't have enough hero-specific training data to reconstruct a specific character from text alone.
+
+**Fix:** Meshy's image-to-3D workflow solves this. The tool now surfaces this recommendation automatically.
+
+**Product insight:** Meshy should route users asking for specific IP characters toward image-to-3D more prominently in the UI.
+
+---
+
+### Finding 4 — Free tier download gating breaks the evaluation loop
+
+While running this experiment, a real friction point surfaced: **the free tier doesn't allow GLB downloads.**
+
+This means free users can generate models but can't export, evaluate, or use them in Blender or game engines. The "try before you buy" loop is broken — users who can't evaluate quality won't upgrade.
+
+This is likely a significant, fixable conversion drag.
+
+---
+
+## Improvements Made During Experiment
+
+### Game IP detection
+After testing Dota 2 characters, the rewriter was upgraded to detect known game IPs and apply IP-specific art styles:
+
+```
+Input:  dota 2 invoker
+Output: 3D model of dota 2 invoker, Dota 2 stylized hero model, 
+        Valve art style, detailed armor and fabric, game-ready PBR 
+        materials, clean quad topology, isolated object, no background, 
+        standing upright in T-pose
+```
+
+Supported IPs: Dota 2, League of Legends, Overwatch, Valorant, Fortnite, World of Warcraft, Minecraft, Pokemon.
+
+### Named character recognition
+Added a known character list (Shadow Fiend, Invoker, Pudge, Yasuo, Tracer, etc.) so abbreviated or named inputs are correctly detected as characters rather than generic objects.
+
+### Honest routing
+When the optimizer detects an IP character, it now flags that image-to-3D is the correct workflow — rather than producing an over-optimized text prompt that still won't work.
+
+---
+
+## Rewriter Rules
+
+Every change is deterministic and explainable — no black-box LLM:
+
+| Rule | Reason |
+|---|---|
+| Add "3D model of" prefix | Meshy responds better to explicit 3D framing |
+| Detect object type | Enables context-aware downstream rules |
+| Add style tag | Style-less prompts produce inconsistent results |
+| Add material hint | Material ambiguity causes texture inconsistency |
+| Add "clean quad topology" | Improves mesh quality for rigging and sculpting |
+| Add isolation context | Prevents unwanted scene elements |
+| Add T-pose for characters | Critical for rigging compatibility |
+| Replace vague adjectives | "cool" → "detailed", "nice" → "well-crafted" |
+
+---
 
 ## Mesh Scoring Methodology
 
-Each generated GLB is scored on 5 objective metrics from 3D printing literature:
+Each GLB is scored on 4 objective topology metrics:
 
 | Metric | Weight | Why It Matters |
 |---|---|---|
@@ -48,64 +131,41 @@ Each generated GLB is scored on 5 objective metrics from 3D printing literature:
 | Non-manifold edges | 25 pts | Topology quality |
 | Degenerate faces | 15 pts | Mesh cleanliness |
 
-Composite score: 0–100.
+Composite score: 0–100. Scoring was blocked on Meshy free tier (no GLB downloads) — infrastructure is built and validated on external GLBs.
 
-## Rewriter Rules
-
-Rules are deterministic — every change is explainable:
-
-1. Add `"3D model of"` prefix
-2. Detect object type (character / weapon / vehicle / prop / creature)
-3. Infer and add style tag if missing
-4. Infer and add material hint if missing
-5. Add `"clean quad topology"` hint
-6. Add isolation context (`"isolated object, no background"`)
-7. Add T-pose orientation for characters
-8. Replace vague adjectives (`"cool"` → `"detailed"`)
+---
 
 ## Setup
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/meshy-prompt-forge
+git clone https://github.com/sanmati1997/meshy-prompt-forge
 cd meshy-prompt-forge
 pip install -r requirements.txt
 ```
 
-**Run the web app:**
+**Web app:**
 ```bash
 streamlit run app.py
 ```
 
-**Run from CLI:**
+**CLI:**
 ```bash
-# Rewrite a prompt
 python run.py rewrite "a cool sword"
-
-# Score a mesh
 python run.py score model.glb
-
-# Compare naive vs optimized
 python run.py compare naive.glb optimized.glb
-
-# Full guided experiment
 python run.py batch
 ```
+
+---
 
 ## Stack
 
 - Python, trimesh, numpy — mesh scoring
 - Streamlit, Plotly — web UI
-- Rule-based rewriter — no LLM, every change is transparent and explainable
+- Rule-based rewriter — transparent, auditable, no LLM dependency
 - Meshy free tier — 3D generation
-
-## Context
-
-Built in one night as a research project to understand Meshy's activation funnel.
-
-The claim: optimized prompts consistently produce higher-quality meshes than naive prompts, as measured by objective topology metrics.
-
-The tool is fully external — no internal Meshy data required.
 
 ---
 
-Built by [Sanmati Walwade](https://linkedin.com/in/sanmatiwalwade) — MS Information Systems, Northeastern University
+Built by [Sanmati Sawalwade](https://linkedin.com/in/sanmatiwalwade) — MS Information Systems, Northeastern University Silicon Valley  
+Email: sawalwade.s@northeastern.edu
