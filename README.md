@@ -22,7 +22,7 @@ Changes: 5 — each one explained with a reason
 
 ## Results
 
-### Dragon - +20.8% geometry, topology fully confirmed
+### Dragon: +20.8% geometry, topology fully confirmed
 
 | Naive: `dragon` | Optimized |
 |:---:|:---:|
@@ -37,7 +37,7 @@ Changes: 5 — each one explained with a reason
 
 ---
 
-### Sword - material inference risk identified and fixed
+### Sword: material inference risk identified and fixed
 
 | Naive: `a cool sword` | Wrong optimized | Fixed optimized |
 |:---:|:---:|:---:|
@@ -47,7 +47,7 @@ Changes: 5 — each one explained with a reason
 
 ---
 
-### Warrior - T-pose + isolation produces rigging-ready assets
+### Warrior: T-pose + isolation produces rigging-ready assets
 
 | Naive: `warrior` | Optimized (T-pose) |
 |:---:|:---:|
@@ -63,7 +63,7 @@ Fewer faces = fewer wasted polygons on base geometry. Optimization redirected th
 
 ---
 
-### Dota 2 SF - IP characters need image-to-3D, not text optimization
+### Dota 2 SF: IP characters need image-to-3D, not text optimization
 
 | Official art | Naive: `dota 2 sf` | Optimized |
 |:---:|:---:|:---:|
@@ -73,7 +73,7 @@ Optimized prompt produced a better hero structure (+16.7% geometry), but neither
 
 ---
 
-### Crate - diminishing returns on simple props, topology still improves
+### Crate: diminishing returns on simple props, topology still improves
 
 | Naive: `crate` | Optimized |
 |:---:|:---:|
@@ -104,29 +104,29 @@ Text-to-3D is 10x harder to prompt than text-to-image. New users have no mental 
 
 ## Key Findings
 
-### ✅ Finding 1 — Optimization works best on complex objects
+### ✅ Finding 1 - Optimization works best on complex objects
 Dragon: +20.8% geometry, watertight, 0 holes, 0 non-manifold edges. Patterns push Meshy toward production-ready outputs on ambiguous objects.
 
-### ⚠️ Finding 2 — Material hints can override style intent
+### ⚠️ Finding 2 - Material hints can override style intent
 `"tempered steel blade"` turned a fantasy sword into a combat knife. Fix: use explicit object-type framing to preserve intent before adding material hints.
 
-### ✅ Finding 3 — T-pose + isolation is the highest-impact pattern for characters
+### ✅ Finding 3 - T-pose + isolation is the highest-impact pattern for characters
 `warrior` naive: 992K faces on a pedestal. Optimized: 574K faces, T-pose, no base — 42% smaller and actually usable in a game engine.
 
-### 🔍 Finding 4 — IP characters can't be reproduced from text alone
+### 🔍 Finding 4 - IP characters can't be reproduced from text alone
 Neither prompt produced a recognizable Shadow Fiend. The tool now detects IP characters and flags the image-to-3D workflow.
 
-### 📊 Finding 5 — Simple props: smaller geometry lift, topology gains still real
+### 📊 Finding 5 - Simple props: smaller geometry lift, topology gains still real
 Crate: only +9.9% geometry improvement vs. +20.8% for the dragon. But holes dropped 69%, non-manifold edges dropped 57%.
 
-### 🔍 Finding 6 — Free tier download gating breaks the evaluation loop
+### 🔍 Finding 6 - Free tier download gating breaks the evaluation loop
 Free users can generate but can't export. They can't validate quality before paying. The try-before-you-buy loop is broken.
 
 ---
 
 ## How It Works
 
-**Rewriter patterns** — deterministic, fully explainable:
+**Rewriter patterns** - deterministic, fully explainable:
 
 | Pattern | Reason |
 |---|---|
@@ -139,7 +139,7 @@ Free users can generate but can't export. They can't validate quality before pay
 | Add T-pose for characters | Critical for rigging compatibility |
 | Replace vague adjectives | `"cool"` → `"detailed"`, `"nice"` → `"well-crafted"` |
 
-**Mesh scorer** — 4 objective topology metrics:
+**Mesh scorer** - 4 objective topology metrics:
 
 | Metric | Weight |
 |---|---|
