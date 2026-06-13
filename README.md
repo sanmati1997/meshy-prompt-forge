@@ -2,7 +2,7 @@
 
 > Turns weak 3D prompts into production-ready ones - built to reduce activation drop-off on Meshy.ai.
 
-**[Live demo](https://meshy-optimizer.streamlit.app)** | **[Case study](CASE_STUDY.md)** | Built in one night
+**[Live demo](https://meshy-optimizer.streamlit.app)** | **[Case study](CASE_STUDY.md)** | Built by [Sanmati Sawalwade](https://linkedin.com/in/sanmati-sawalwade)
 
 ---
 
@@ -91,7 +91,7 @@ Smallest geometry lift of all tests — confirms the secondary hypothesis. Simpl
 
 ## The Problem
 
-Meshy has 6M users but most never convert to paid. The biggest activation killer: prompt sensitivity.
+Meshy is backed by Sequoia and GGV Capital ($52M raised), ranked #1 in 3D AI tools by popularity (A16Z Games 2024), and has 6M+ users — but most never convert to paid. The biggest activation killer: prompt sensitivity.
 
 Text-to-3D is 10x harder to prompt than text-to-image. New users have no mental model for it — they type one word, get a mediocre mesh, burn free credits, and leave before the "aha moment."
 
@@ -126,7 +126,7 @@ Free users can generate but can't export. They can't validate quality before pay
 
 ## How It Works
 
-**Rewriter patterns** - deterministic, fully explainable:
+**Rewriter patterns** — heuristic-driven, fully explainable:
 
 | Pattern | Reason |
 |---|---|
@@ -171,4 +171,4 @@ python run.py compare naive.glb optimized.glb
 ---
 
 Built by [Sanmati Sawalwade](https://linkedin.com/in/sanmati-sawalwade) — MS Information Systems, Northeastern University Silicon Valley  
-sawalwade.s@northeastern.edu
+sawalwade.s@northeastern.edu | [sanmati1997.github.io](https://sanmati1997.github.io)
