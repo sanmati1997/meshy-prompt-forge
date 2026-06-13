@@ -26,7 +26,7 @@
 
 ## The Problem
 
-Meshy has 6 million users but approximately $15M ARR - roughly **$2.50 average revenue per user**. Most users are free and never convert to paid.
+Meshy is backed by Sequoia and GGV Capital ($52M raised), ranked #1 in 3D AI tools by popularity (A16Z Games 2024), and has 6M+ users — but most never convert to paid.
 
 The biggest reason: **bad first experience.**
 

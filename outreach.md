@@ -13,11 +13,11 @@ Hi [Name],
 
 I noticed Meshy's prompt sensitivity is the biggest friction point for new users — G2 reviews, Trustpilot, and your own prompt tips doc all point to it.
 
-So I built a tool: it rewrites naive prompts into optimized ones and scores the generated mesh quality. Tested on 6 prompts — optimized versions scored X% higher on average (watertight rate, non-manifold edges, degenerate faces).
+So I built a tool: rewrites naive prompts into optimized ones and scores the output mesh. Tested on 6 objects — dragon +20.8% geometry with topology fully confirmed (watertight, 0 holes, 0 NME), warrior -42% faces but rigging-ready (T-pose, no pedestal), crate holes -69% and NME -57%.
 
-Repo + live demo: [link]
+Repo + live demo: github.com/sanmati1997/meshy-prompt-optimizer | meshy-optimizer.streamlit.app
 
-I'm a MS Information Systems student at Northeastern (Silicon Valley) looking for a summer internship. Happy to walk through the methodology if useful.
+I'm an MS Information Systems student at Northeastern (Silicon Valley) looking for a Summer/Fall 2026 internship. Happy to walk through the methodology if useful.
 
 — Sanmati
 
@@ -31,9 +31,9 @@ I spent last night investigating Meshy's activation problem. The hypothesis: pro
 
 To test it, I built a heuristic-driven prompt optimizer + objective mesh scorer (trimesh, 5 topology metrics). Ran it across 6 prompt categories.
 
-Result: optimized prompts produced measurably better meshes in X/6 cases, averaging +N points on a 0–100 composite score.
+Result: optimized prompts produced measurably better meshes in 5/6 cases. Dragon: +20.8% geometry, topology confirmed watertight (0 holes, 0 NME). Warrior: -42% faces — fewer, not worse — because T-pose + isolation eliminated ~400K wasted faces on the pedestal, producing a rigging-ready character.
 
-The interesting part wasn't the lift — it was the failure modes. [Add one specific finding from your experiment here, e.g. "Character prompts without T-pose orientation had 3x more non-manifold edges."]
+The interesting part wasn't the lift — it was the failure mode. Adding "tempered steel blade" to a sword prompt overrode the user's fantasy intent and produced a combat knife instead of a longsword. Object-type framing beats material hints when intent is ambiguous — and nothing in Meshy's current interface warns users about this.
 
 Repo: [link]
 
@@ -45,7 +45,7 @@ I'm an MS IS student at Northeastern (Silicon Valley), ex-Gameskraft, startup fo
 
 ## Message 3 — One-liner (for Twitter/X DM or if they're very senior)
 
-Built a prompt optimizer for Meshy that lifts mesh quality scores by X% on average — fully external, scored with trimesh on 6 prompts. [link]. MS student @ Northeastern SV, looking for internship — is this the kind of problem your team cares about?
+Built a prompt optimizer for Meshy — dragon +20.8% geometry, warrior -42% faces but rigging-ready, found a material inference failure mode that actively hurts output quality. Fully external, scored with trimesh. github.com/sanmati1997/meshy-prompt-optimizer — MS student @ Northeastern SV, looking for internship — is this the kind of problem your team cares about?
 
 ---
 
