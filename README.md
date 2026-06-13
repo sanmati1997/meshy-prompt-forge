@@ -15,7 +15,7 @@ Input:   "a cool sword"
 Output:  "3D model of Fantasy sword, enchanted steel blade,
           clean quad topology, isolated object, no background"
 
-Changes: 5 — each one explained with a reason
+Changes: 5, each one explained with a reason
 ```
 
 ---
@@ -31,9 +31,9 @@ Changes: 5 — each one explained with a reason
 | Metric | Naive | Optimized | Delta |
 |---|---|---|---|
 | Faces | 992,658 | 1,199,452 | **+20.8%** |
-| Watertight | — | **Yes** | ✅ |
-| Holes | — | **0** | ✅ |
-| Non-manifold edges | — | **0** | ✅ |
+| Watertight | - | **Yes** | ✅ |
+| Holes | - | **0** | ✅ |
+| Non-manifold edges | - | **0** | ✅ |
 
 ---
 
@@ -69,7 +69,7 @@ Fewer faces = fewer wasted polygons on base geometry. Optimization redirected th
 |:---:|:---:|:---:|
 | ![SF Reference](assets/results/sf_reference.png) | ![SF Naive](assets/results/sf_naive.png) | ![SF Optimized](assets/results/sf_optimized.png) |
 
-Optimized prompt produced a better hero structure (+16.7% geometry), but neither output is Shadow Fiend. This is a training data gap — no prompt fixes it. The tool now detects IP characters and routes to image-to-3D.
+Optimized prompt produced a better hero structure (+16.7% geometry), but neither output is Shadow Fiend. This is a training data gap; no prompt fixes it. The tool now detects IP characters and routes to image-to-3D.
 
 ---
 
@@ -85,20 +85,20 @@ Optimized prompt produced a better hero structure (+16.7% geometry), but neither
 | Holes | 13 | 4 | **-69.2%** |
 | Non-manifold edges | 426 | 183 | **-57.0%** |
 
-Smallest geometry lift of all tests — confirms the secondary hypothesis. Simple objects benefit less. But topology cleanup is still real.
+Smallest geometry lift of all tests, confirming the secondary hypothesis. Simple objects benefit less. But topology cleanup is still real.
 
 ---
 
 ## The Problem
 
-Meshy is backed by Sequoia and GGV Capital ($52M raised), ranked #1 in 3D AI tools by popularity (A16Z Games 2024), and has 6M+ users — but most never convert to paid. The biggest activation killer: prompt sensitivity.
+Meshy is backed by Sequoia and GGV Capital ($52M raised), ranked #1 in 3D AI tools by popularity (A16Z Games 2024), and has 6M+ users, but most never convert to paid. The biggest activation killer: prompt sensitivity.
 
-Text-to-3D is 10x harder to prompt than text-to-image. New users have no mental model for it — they type one word, get a mediocre mesh, burn free credits, and leave before the "aha moment."
+Text-to-3D is 10x harder to prompt than text-to-image. New users have no mental model for it. They type one word, get a mediocre mesh, burn free credits, and leave before the "aha moment."
 
 **Evidence:**
 - G2: *"small wording changes produce wildly different results"*
 - Trustpilot: users reporting wasted credits on bad first outputs
-- Meshy's own prompt tips doc — companies only write those when support tickets pile up
+- Meshy's own prompt tips doc (companies only write those when support tickets pile up)
 
 ---
 
@@ -111,7 +111,7 @@ Dragon: +20.8% geometry, watertight, 0 holes, 0 non-manifold edges. Patterns pus
 `"tempered steel blade"` turned a fantasy sword into a combat knife. Fix: use explicit object-type framing to preserve intent before adding material hints.
 
 ### ✅ Finding 3 - T-pose + isolation is the highest-impact pattern for characters
-`warrior` naive: 992K faces on a pedestal. Optimized: 574K faces, T-pose, no base — 42% smaller and actually usable in a game engine.
+`warrior` naive: 992K faces on a pedestal. Optimized: 574K faces, T-pose, no base, 42% smaller and actually usable in a game engine.
 
 ### 🔍 Finding 4 - IP characters can't be reproduced from text alone
 Neither prompt produced a recognizable Shadow Fiend. The tool now detects IP characters and flags the image-to-3D workflow.
@@ -126,7 +126,7 @@ Free users can generate but can't export. They can't validate quality before pay
 
 ## How It Works
 
-**Rewriter patterns** — heuristic-driven, fully explainable:
+**Rewriter patterns** (heuristic-driven, fully explainable):
 
 | Pattern | Reason |
 |---|---|
@@ -170,5 +170,5 @@ python run.py compare naive.glb optimized.glb
 
 ---
 
-Built by [Sanmati Sawalwade](https://linkedin.com/in/sanmati-sawalwade) — MS Information Systems, Northeastern University Silicon Valley  
+Built by [Sanmati Sawalwade](https://linkedin.com/in/sanmati-sawalwade), MS Information Systems, Northeastern University Silicon Valley  
 sawalwade.s@northeastern.edu | [sanmati1997.github.io](https://sanmati1997.github.io)

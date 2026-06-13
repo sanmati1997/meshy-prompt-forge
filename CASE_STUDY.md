@@ -26,7 +26,7 @@
 
 ## The Problem
 
-Meshy is backed by Sequoia and GGV Capital ($52M raised), ranked #1 in 3D AI tools by popularity (A16Z Games 2024), and has 6M+ users — but most never convert to paid.
+Meshy is backed by Sequoia and GGV Capital ($52M raised), ranked #1 in 3D AI tools by popularity (A16Z Games 2024), and has 6M+ users, but most never convert to paid.
 
 The biggest reason: **bad first experience.**
 
